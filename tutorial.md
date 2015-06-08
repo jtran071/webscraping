@@ -94,7 +94,7 @@ It's a bit hard to read at first so we'll run through the command.
 - the first pattern is what we will be finding; the parenthesis capture whatever is inside of `.*>` and `<.*`
 - the `\1` refers to the escaped parenthesis which we will be keeping
 
-![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummuSedFail.png)
+![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummySedFail.png)
 
 Oops! We weren’t able to include the directions.
 Notice that there are several angle brackets that enclose the text for directions.
