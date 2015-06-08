@@ -56,7 +56,7 @@ To do this, we will need to figure out which tags are associated with which part
 
 To find which part of the web page is associated with which HTML tag simply right-click and inspect element on the web page as shown.
 By looking at the tags that enclose the data you want to extract, you can get an idea of what the pattern looks like, which can be used to build a regex for `grep`.
-Let’s take a look at what the file in `Yummy-Honey-Chicken-Kabobs’ looks like.
+Let’s take a look at what the file in `Yummy-Honey-Chicken-Kabobs` looks like.
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/Yummy.png)
 
