@@ -36,7 +36,7 @@ You can stop the download with `Ctrl + C` to cancel it and run it again later
 or run it in the background with `Ctrl + Z` and `bg`.
 However, if you have added a `&` you must directly kill the process via `pkill -9 wget` to stop it.
 
-[display.png]
+![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/display.png)
 
 Once it is done, you will have a folder `allrecipes.com`.
 Inside of it should contain another folder `Recipe` which contains all the
@@ -50,7 +50,9 @@ HTML consists of tags enclosed in angle brackets like `<html>` and usually come 
 We can use this to our advantage when using `grep`.
 To do this, we will need to figure out which tags are associated with which part of the web page and the data the tags enclose.
 
-[yummy1.gif & yummy2.gif]
+![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/yummy1.gif)
+
+![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/yummy2.gif)
 
 To find which part of the web page is associated with which HTML tag simply right-click
 and inspect element on the web page as shown.
@@ -78,7 +80,9 @@ Now we need to clean up all the extra HTML tags in our file.
 `sed` can help us find and remove those HTML patterns.
 `sed` also supports regex, and depending on the patterns, it may get a bit messy when constructing it.
 
-[YummyGrep.txt]
+![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummyGrep1Marked.png)
+
+![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummyGrep2Marked.png)
 
 We will need to find a pattern that matches what we’re trying to remove.
 
@@ -90,12 +94,12 @@ It's a bit hard to read at first so we'll run through the command.
 - the first pattern is what we will be finding; the parenthesis capture whatever is inside of `.*>` and `<.*`
 - the `\1` refers to the escaped parenthesis which we will be keeping
 
-[YummySedFail.txt -- missing!]
+![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummuSedFail.png)
 
 Oops! We weren’t able to include the directions.
 Notice that there are several angle brackets that enclose the text for directions.
 
-[YummyGrepEdited.txt -- missing!]
+![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummyGrep2MarkedPeriod.png)
 
 We can get the directions by including a second pattern into the sed command. 
 
@@ -107,7 +111,7 @@ So we included a period in the pattern and had it remove the period and everythi
 The key to using `sed` is noticing and experimenting with the patterns.
 Finally we get this as our output!
 
-[YummySed.txt]
+![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummySed.png)
 
 ### Resources
 - [Wget manual page] (http://www.gnu.org/software/wget/manual/wget.html) for 
