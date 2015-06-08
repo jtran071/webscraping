@@ -7,10 +7,10 @@ We will scrape for recipes that has chicken as the main ingredient.
 
 ### Web scraping and Wget
 
-To download a webpage we use `wget [url]` and view the downloaded content with an editor.
+To download a webpage we use [wget] (http://www.gnu.org/software/wget/manual/wget.html) and view the downloaded content with an editor.
 In our example, we will be searching for chicken recipes on [allrecipes.com] (allrecipes.com) and compiling it into a single file.
 First, we need to download all of the recipes off the website, but that is *a lot* of recipes to download as well as other irrelevant content.
-To narrow it down to only chicken we can specify the regular expression (regex) in our command.
+To narrow it down to only chicken we can specify the regular expression ([regex] (https://github.com/mikeizbicki/ucr-cs100/tree/2015spring/textbook/tools/bash/regex)) in our command.
 
 ```wget -q -r -c -np -nc --accept-regex allrecipes.com/Recipe/.*Chicken.* allrecipes.com```
 so we need to explain why we chose these flags and 
@@ -28,7 +28,7 @@ If you ran the command without the `-q` flag you should get something like this
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/wget.gif)
 
-On some occasions, you will be unable to what is meant by follow follow certain pages when doing a recursive download or if you are running multiple instances of `wget`.
+On some occasions, you will be unable to access or download from certain links when doing a recursive download or if you are running multiple instances of `wget`.
 Some websites block tools like `wget` with a `robots.txt` which tells `wget` what it can and cannot follow.
 You can have `wget` ignore `robots.txt` with the flag `--execute robots=off` to bypass the restrictions.
 To run multiple instances of `wget` you may place a `&` at the end, to execute it and place it in the background and run the command again for as many times as you want.
@@ -45,9 +45,10 @@ Inside of it should contain another folder `Recipe` which contains all the web c
 ### HTML and Grep
 
 After downloading hundreds to thousands of files we will need to get rid of all the clutter in the files we don’t want.
-Most of the files we have downloaded are in HTML, HyperText Markup Language, which is used to create web pages.
+In our case, we just want anything that have to do with chicken recipes so we only want information on the name of the recipes, the ingredients needed, and the direction on how to make it.
+Most of the files we have downloaded are in HTML (HyperText Markup Language) which is used to create web pages.
 HTML consists of tags enclosed in angle brackets like `<html>` and usually come in pairs such as `<h1>` and `</h1>` with content enclosed in the tags.
-We can use this to our advantage when using `grep`.
+We can use this to our advantage when using [grep] (http://linux.die.net/man/1/grep).
 To do this, we will need to figure out which tags are associated with which part of the web page and the data the tags enclose.
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/yummy1.gif)
@@ -60,6 +61,8 @@ Let’s take a look at what the file in `Yummy-Honey-Chicken-Kabobs` looks like.
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/Yummy.png)
 
+There are a few thousand lines of text in the files and we obviously do not want to look through all that to find a pattern.
+Thankfully, we already know what it looks like when we inspected the web page earlier.
 By looking at the tags that enclose the data you want to extract, you can get an idea of what the pattern looks like, which can be used to build a regex for `grep`.
 In our case we’ll be trying to find the following tags:
 - `<h1 id="itemTitle" class="plaincharacterwrap fn" itemprop="name"> __NAME__ </h1>`
@@ -69,7 +72,7 @@ In our case we’ll be trying to find the following tags:
 
 The names `__NAME__`, `__AMOUNT__`,  `__INGREDIENT__`, and `__DIRECTION__` are
 simply placeholders for the actual values for that certain recipe.
-Since we have multiple patterns we can append them together with the regex OR: ‘\|’.
+Since we have multiple patterns we can append them together with the regex OR: `\|`.
 
 Example:
 ```grep -r '<h1 id="itemTitle" class="plaincharacterwrap fn" itemprop="name">.*</h1>\|<span id="lblIngAmount" class="ingredient-amount">.*</span>\|<span id="lblIngName" class="ingredient-name">.*</span>\|<span class="plaincharacterwrap break">.*</span>' allrecipes.com/Recipe | cat > output.txt```
@@ -77,17 +80,17 @@ Example:
 By doing a recursive `grep` call with multiple regexes, we have `grep`  go through all the files in `allrecipes.com/Recipe`.
 Then by piping `grep`’s output to `cat` and redirecting it to `output.txt` we’ve compiled all the information we want into the file.
 
-### Patterns and sed (SOMEONE WHO KNOWS HOW WORKS DO THIS)
+### Patterns and Sed
 
 Now we need to clean up all the extra HTML tags in our file.
-`sed` can help us find and remove those HTML patterns.
+[sed] (http://www.grymoire.com/Unix/Sed.html) can help us find and remove those HTML patterns.
 `sed` also supports regex, and depending on the patterns, it may get a bit messy when constructing it.
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummyGrep1Marked.png)
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummyGrep2Marked.png)
 
-We will need to find a pattern that matches what we’re trying to remove.
+We will need to find a pattern that matches what we are trying to remove.
 
 `sed -n 's/.*>\(.*\)<.*/\1/ p’`
 
@@ -99,18 +102,18 @@ It's a bit hard to read at first so we will run through the command.
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummySedFail.png)
 
-Oops! We weren’t able to include the directions.
+Oops! We were not able to include the directions.
 Notice that there are several angle brackets that enclose the text for directions.
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummyGrep2MarkedPeriod.png)
 
 We can get the directions by including a second pattern into the sed command. 
 
-`sed -n 's/.*>\(.*\)\.<.*/\1/ p;s/.*>\(.*\)<.*/\1/ p'`
+`sed -n 's/.*>\(.*\)<.*/\1/ p;s/.*>\(.*\)\.<.*/\1/ p’`
 
 The `;` will introduce the second pattern to sed.
-The `__DIRECTION__` section did not show up in the previous command because there is a difference in the pattern, more specifically the period in the directions section.
-So we included a period in the pattern and had it remove the period and everything after.
+The `__DIRECTION__` section did not show up in the previous command because there is a difference in the pattern, more specifically, it is the period at the end of each sentence in the directions section.
+So we included a period in the second pattern and had it remove the period and everything after it.
 The key to using `sed` is noticing and experimenting with various patterns.
 Finally we get this as our output!
 
@@ -125,3 +128,8 @@ We can now feed this data to another program for other applications.
 - [Sed tutorial] (http://www.grymoire.com/Unix/Sed.html) for more information on sed.
 - [Regular expressions tutorial] (https://github.com/mikeizbicki/ucr-cs100/tree/2015spring/textbook/tools/bash/regex) for more
 information on regex.
+
+
+
+
+
