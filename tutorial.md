@@ -24,7 +24,7 @@ This will be fail-safe to prevent downloading files we don’t need
 - `--accept-regex` will only follow web pages with the specified regular expression as its url to avoid downloading files we do not want which would save us both time and resources
 
 If you ran the command without the `-q` flag you should get something like this
-[wget.gif]
+![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/wget.gif)
 
 On some occasions, you will be unable to follow certain pages when doing a recursive download.
 Some websites block tools like `wget` with a `robots.txt` which tells `wget` what it can and cannot follow.
