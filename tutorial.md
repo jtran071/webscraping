@@ -97,7 +97,7 @@ Notice that there are several angle brackets that enclose the text for direction
 
 [YummyGrepEdited.txt -- missing!]
 
-We can get the directions by including a second pattern into the sed command. 
+We can get the directions by including a second pattern into the sed command.
 
 `sed -n 's/.*>\(.*\)\.<.*/\1/ p;s/.*>\(.*\)<.*/\1/ p'`
 
@@ -110,7 +110,7 @@ Finally we get this as our output!
 [YummySed.txt]
 
 ### Resources
-- [Wget manual page] (http://www.gnu.org/software/wget/manual/wget.html) for 
+- [Wget manual page] (http://www.gnu.org/software/wget/manual/wget.html) for
  more information on wget.
 - [Grep manual page] (http://linux.die.net/man/1/grep) for more information on grep.
 - [Sed tutorial] (http://www.grymoire.com/Unix/Sed.html) for more information on sed.
