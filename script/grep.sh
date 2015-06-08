@@ -1,1 +1,2 @@
-grep -r -n '<h1 id="itemTitle" class="plaincharacterwrap fn" itemprop="name">.*</h1>\|<span id="lblIngAmount" class="ingredient-amount">.*</span>\|<span id="lblIngName" class="ingredient-name">.*</span>\|<span class="plaincharacterwrap break">.*</span>' allrecipes.com/Recipe/Yummy-Honey-Chicken-Kabobs | cat > YummyGrep.txt
+# sh grep.sh [path/file]
+grep -r '<h1 id="itemTitle" class="plaincharacterwrap fn" itemprop="name">.*</h1>\|<span id="lblIngAmount" class="ingredient-amount">.*</span>\|<span id="lblIngName" class="ingredient-name">.*</span>\|<span class="plaincharacterwrap break">.*</span>' $1 | cat > YummyGrep.txt
