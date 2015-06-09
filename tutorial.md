@@ -5,7 +5,7 @@ By combining all of these simple programs we can create a web scraper.
 In particular, we will be using a site called allrecipes.com to illustrate how to webscrape. 
 We will scrape for recipes that has chicken as the main ingredient.
 
-### Web scraping and Wget
+### Web scraping and wget
 
 To download a webpage we use [wget] (http://www.gnu.org/software/wget/manual/wget.html) and view the downloaded content with an editor.
 In our example, we will be searching for chicken recipes on [allrecipes.com] (allrecipes.com) and compiling it into a single file.
@@ -24,7 +24,7 @@ This will allow us to look for our chicken recipes throughout the whole site.
 This will help us decrease the time it will take for the process to finish because it only downloads the file one time.
 - `--accept-regex` will only follow web pages with the specified regular expression as its url to avoid downloading files we do not want which would save us both time and resources.
 
-If you ran the command without the `-q` flag you should get something like this
+If you ran the command without the `-q` flag you should get something like this:
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/wget.gif)
 
@@ -42,11 +42,11 @@ However, if you have added a `&` you must directly kill the process via `pkill -
 Once it is done, you will have a folder `allrecipes.com`.
 Inside of it should contain another folder `Recipe` which contains all the web content downloaded, each in their respective folders.
 
-### HTML and Grep
+### HTML and grep
 
 After downloading hundreds to thousands of files we will need to get rid of all the clutter in the files we don’t want.
 In our case, we just want anything that have to do with chicken recipes so we only want information on the name of the recipes, the ingredients needed, and the direction on how to make it.
-Most of the files we have downloaded are in HTML (HyperText Markup Language) which is used to create web pages.
+Most of the files we have downloaded are in HTML ([HyperText Markup Language](http://en.wikipedia.org/wiki/HTML)) which is used to create web pages.
 HTML consists of tags enclosed in angle brackets like `<html>` and usually come in pairs such as `<h1>` and `</h1>` with content enclosed in the tags.
 We can use this to our advantage when using [grep] (http://linux.die.net/man/1/grep).
 To do this, we will need to figure out which tags are associated with which part of the web page and the data the tags enclose.
@@ -77,14 +77,16 @@ Since we have multiple patterns we can append them together with the regex OR: `
 Example:
 ```grep -r '<h1 id="itemTitle" class="plaincharacterwrap fn" itemprop="name">.*</h1>\|<span id="lblIngAmount" class="ingredient-amount">.*</span>\|<span id="lblIngName" class="ingredient-name">.*</span>\|<span class="plaincharacterwrap break">.*</span>' allrecipes.com/Recipe | cat > output.txt```
 
-By doing a recursive `grep` call with multiple regexes, we have `grep`  go through all the files in `allrecipes.com/Recipe`.
+By doing a recursive `grep` call with multiple regexes as shown in the example above, we have `grep`  go through all the files in `allrecipes.com/Recipe`.
 Then by piping `grep`’s output to `cat` and redirecting it to `output.txt` we’ve compiled all the information we want into the file.
 
-### Patterns and Sed
+### Patterns and sed
 
 Now we need to clean up all the extra HTML tags in our file.
-[sed] (http://www.grymoire.com/Unix/Sed.html) can help us find and remove those HTML patterns.
+The command [sed] (http://www.grymoire.com/Unix/Sed.html) can help us find and remove those HTML patterns.
 `sed` also supports regex, and depending on the patterns, it may get a bit messy when constructing it.
+
+NOTE: The green highlighting indicates the information we want, while the yellow highlighting indicates the HTML code we want to remove in the file located in `Yummy-Honey-Chicken-Kabobs`.
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummyGrep1Marked.png)
 
@@ -92,7 +94,7 @@ Now we need to clean up all the extra HTML tags in our file.
 
 We will need to find a pattern that matches what we are trying to remove.
 
-`sed -n 's/.*>\(.*\)<.*/\1/ p’`
+`sed -n 's/.*>\(.*\)<.*/\1/ p’ input.txt | cat > output.txt`
 
 The texts we want are located in between `>` and `<` so the pattern above aims to remove everything BUT the texts in between the angle brackets which are enclosed in parenthesis.
 It's a bit hard to read at first so we will run through the command.
@@ -109,10 +111,10 @@ Notice that there are several angle brackets that enclose the text for direction
 
 We can get the directions by including a second pattern into the sed command. 
 
-`sed -n 's/.*>\(.*\)<.*/\1/ p;s/.*>\(.*\)\.<.*/\1/ p’`
+`sed -n 's/.*>\(.*\)<.*/\1/ p;s/.*>\(.*\)\.<.*/\1/ p’ input.txt | cat > output.txt`
 
 The `;` will introduce the second pattern to sed.
-The `__DIRECTION__` section did not show up in the previous command because there is a difference in the pattern, more specifically, it is the period at the end of each sentence in the directions section.
+The `__DIRECTION__` section did not show up in the previous command because there is a difference in the pattern, more specifically, it is the period at the end of each sentence in the directions section, which can be seen in the picture above in red circles.
 So we included a period in the second pattern and had it remove the period and everything after it.
 The key to using `sed` is noticing and experimenting with various patterns.
 Finally we get this as our output!
