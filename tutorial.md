@@ -13,7 +13,7 @@ First, we need to download all of the recipes off the website, but that is *a lo
 To narrow it down to only chicken we can specify the regular expression ([regex] (https://github.com/mikeizbicki/ucr-cs100/tree/2015spring/textbook/tools/bash/regex)) in our command.
 
 ```wget -q -r -c -np -nc --accept-regex allrecipes.com/Recipe/.*Chicken.* allrecipes.com```
-so we need to explain why we chose these flags and 
+
 Here is a quick rundown of the flags used above:
 - `-q` (quiet) will block the output to avoid cluttering your terminal.
 - `-r` (recursive) does recursive downloading so we can traverse the entire website instead of just the given url page. 
@@ -75,6 +75,7 @@ simply placeholders for the actual values for that certain recipe.
 Since we have multiple patterns we can append them together with the regex OR: `\|`.
 
 Example:
+
 ```grep -r '<h1 id="itemTitle" class="plaincharacterwrap fn" itemprop="name">.*</h1>\|<span id="lblIngAmount" class="ingredient-amount">.*</span>\|<span id="lblIngName" class="ingredient-name">.*</span>\|<span class="plaincharacterwrap break">.*</span>' allrecipes.com/Recipe | cat > output.txt```
 
 By doing a recursive `grep` call with multiple regexes as shown in the example above, we have `grep`  go through all the files in `allrecipes.com/Recipe`.
