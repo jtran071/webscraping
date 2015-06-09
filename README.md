@@ -1,8 +1,8 @@
 ## Web scraping
 
 This tutorial covers web-scraping with the basic Unix commands: `wget`, `grep`, and `sed`.
-By combining all of these simple programs we can create a web scraper.
-In particular, we will be using a site called allrecipes.com to illustrate how to webscrape.
+By combining all of these simple programs we can create a web scraper. 
+In particular, we will be using a site called allrecipes.com to illustrate how to webscrape. 
 We will scrape for recipes that has chicken as the main ingredient.
 
 ### Web scraping and wget
@@ -16,11 +16,11 @@ To narrow it down to only chicken we can specify the regular expression ([regex]
 
 Here is a quick rundown of the flags used above:
 - `-q` (quiet) will block the output to avoid cluttering your terminal.
-- `-r` (recursive) does recursive downloading so we can traverse the entire website instead of just the given url page.
+- `-r` (recursive) does recursive downloading so we can traverse the entire website instead of just the given url page. 
 This will allow us to look for our chicken recipes throughout the whole site.
 - `-c` (continue) will resume downloading from where it was stopped earlier in the cases where the process was stopped.
 - `-np` (no-parent) prevents downloading from parent links which allows us to download every file in the current path and its childs. This will be fail-safe to prevent downloading files we don’t need.
-- `-nc` (no-clobber) prevents the overwriting of the same web file if it is run with the `-r` flag thus preserving the original.
+- `-nc` (no-clobber) prevents the overwriting of the same web file if it is run with the `-r` flag thus preserving the original. 
 This will help us decrease the time it will take for the process to finish because it only downloads the file one time.
 - `--accept-regex` will only follow web pages with the specified regular expression as its url to avoid downloading files we do not want which would save us both time and resources.
 
