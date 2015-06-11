@@ -156,23 +156,3 @@ In order to do this we have to use a bash script.
 
 
 
-
-
-
-
-
-
-
-Now that we finished web scraping for chicken recipes we have an input file for a program like [reciperoulette] (http://www.reciperoulette.tv/) to use.
-The importance of web scraping lies in collecting data from website for input in other programs.
-
-Markdown
-
-use * for bullet list for element in ingredients
-
-directions to be numbered use . or one 1.
-
-title use #title 
-
-
-
