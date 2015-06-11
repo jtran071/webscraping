@@ -109,9 +109,9 @@ This can be done with the help of [sed] (http://www.grymoire.com/Unix/Sed.html),
 
 In the pictures below, the green highlighting indicates the information we want, while the yellow highlighting indicates the HTML code we want to remove in the file located in `Yummy-Honey-Chicken-Kabobs`.
 
-![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummyGrep1Marked.png)
+![my image](https://raw.githubusercontent.com/ktang012/webscraping/master/pictures/HighlightedGrep1.png)
 
-![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummyGrep2Marked.png)
+![my image](https://raw.githubusercontent.com/ktang012/webscraping/master/pictures/HighlightedGrep2.png)
 
 Next, we construct a regular expression that matches the HTML we want to remove.
 
