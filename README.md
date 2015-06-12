@@ -192,6 +192,41 @@ After that, we want to make a for-loop to iterate through all of the recipes and
 
 ```for i in $(ls allrecipes.com/Recipe); do```
 
+Inside the for loop we want to set up our template, `grep` the name, ingredients, and directions one by one and append onto a file. 
+Unlike before this time we want to `grep` and `sed` the name, ingredients, and directions separately from each other in order to put it in their own section.  
+To do this, we write out the each `grep` and `sed` command separately of each other as shown below.
+
+```
+    recipe=$(ls allrecipes.com/Recipe/$i | grep "Detail.*" | head -1)
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
+    echo "Name" >> "Chicken_Recipes/$i.txt"
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
+
+    grep '<h1 id="itemTitle" class="plaincharacterwrap fn" itemprop="name">.*</h1>' "allrecipes.com/Recipe/$i/$recipe" |
+        sed -n 's/.*>\(.*\)\.<.*/\1/ p;s/.*>\(.*\)<.*/\1/ p' >> "Chicken_Recipes/$i.txt"
+
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
+    echo "Ingredients" >> "Chicken_Recipes/$i.txt"
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
+
+    grep '<span id="lblIngAmount" class="ingredient-amount">.*</span>\|<span id="lblIngName" class="ingredient-name">.*</span>' \
+        "allrecipes.com/Recipe/$i/$recipe" |
+        sed -n 's/.*>\(.*\)\.<.*/\1/ p;s/.*>\(.*\)<.*/\1/ p' >> "Chicken_Recipes/$i.txt"
+
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
+    echo "Directions" >> "Chicken_Recipes/$i.txt"
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
+
+    grep '<span class="plaincharacterwrap break">.*</span>' "allrecipes.com/Recipe/$i/$recipe" |
+        sed -n 's/.*>\(.*\)\.<.*/\1/ p;s/.*>\(.*\)<.*/\1/ p' >> "Chicken_Recipes/$i.txt"
+
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
+    done
+
+```
+
+And voila now our script is finished.
+
 
 
 
