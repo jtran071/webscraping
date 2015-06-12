@@ -16,33 +16,34 @@
 # --------------------------------------------------
 # <DIRECTION>
 # --------------------------------------------------
-
 if [ ! -d Chicken_Recipes ]
     then
         mkdir Chicken_Recipes
 fi
 
 for i in $(ls allrecipes.com/Recipe); do
+    #get first Details.aspx in folder
+    recipe=$(ls allrecipes.com/Recipe/$i | grep "Detail.*" | head -1)
     echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
     echo "Name" >> "Chicken_Recipes/$i.txt"
     echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
     #recipe_path="ls allrecipes.com/Recipe/$i" | grep
-    grep -r -m 1 '<h1 id="itemTitle" class="plaincharacterwrap fn" itemprop="name">.*</h1>' allrecipes.com/Recipe/${i} | head -2 |
+    grep '<h1 id="itemTitle" class="plaincharacterwrap fn" itemprop="name">.*</h1>' "allrecipes.com/Recipe/$i/$recipe" |
         sed -n 's/.*>\(.*\)\.<.*/\1/ p;s/.*>\(.*\)<.*/\1/ p' >> "Chicken_Recipes/$i.txt"
 
     echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
     echo "Ingredients" >> "Chicken_Recipes/$i.txt"
     echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
 
-    grep -r  -m 1 '<span id="lblIngAmount" class="ingredient-amount">.*</span>\|<span id="lblIngName" class="ingredient-name">.*</span>' \
-        allrecipes.com/Recipe/${i} | head -1 |
+    grep '<span id="lblIngAmount" class="ingredient-amount">.*</span>\|<span id="lblIngName" class="ingredient-name">.*</span>' \
+        "allrecipes.com/Recipe/$i/$recipe" |
         sed -n 's/.*>\(.*\)\.<.*/\1/ p;s/.*>\(.*\)<.*/\1/ p' >> "Chicken_Recipes/$i.txt"
 
     echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
     echo "Directions" >> "Chicken_Recipes/$i.txt"
     echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
 
-    grep -r -m 1 '<span class="plaincharacterwrap break">.*</span>' allrecipes.com/Recipe/${i} | head -1 |
+    grep '<span class="plaincharacterwrap break">.*</span>' "allrecipes.com/Recipe/$i/$recipe" |
         sed -n 's/.*>\(.*\)\.<.*/\1/ p;s/.*>\(.*\)<.*/\1/ p' >> "Chicken_Recipes/$i.txt"
 
     echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
