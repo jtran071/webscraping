@@ -156,7 +156,7 @@ Our final output looks like this:
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummySed.png)
 
-#Tying everything together with a script
+###Tying everything together with a script
 
 Although we have finished downloading all of the chicken recipes, the output file is very unorganized.  
 We want to be able to see the name of the recipe, the ingredients, and directions very clearly when reading our output file.  
