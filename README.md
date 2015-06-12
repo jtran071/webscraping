@@ -140,7 +140,7 @@ After using `sed` on the input file, the output file looks like this.
 Unfortunately, the directions are excluded in the output file.
 Looking back at the input file, we notice that there is a period at the end of the direction as shown by the red circles below.
 
-![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummyGrep2MarkedPeriod.png)
+![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/RedCircle.jpg)
 
 This is the reason why the directions are not included in the output file.
 We can include the directions by introducing a second pattern into the `sed` command.
