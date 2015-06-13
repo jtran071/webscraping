@@ -232,14 +232,9 @@ To do this, we write out the each `grep` and `sed` command separately of each ot
 
 And voila now our script is finished.
 
-
-
-
-
-
-We have also uploaded a workable script to be used as a comparison of what we just made.
 Now that we finished the script, go ahead and run the script with the command `sh recipe_script.sh`. 
-Once the script is done running, the `Chicken_Recipes` folder contains all of the the recipe files in the correct format.  
+Once the script is done running, the `Chicken_Recipes` folder contains all of the the recipe files in the correct format.
+We have uploaded our script and the result of `sh recipe_script.sh` to be compared.
 
 We now have our very own offline cookbook!
 We can also use the information we web scrape as an input file for programs like [reciperoulette] (http://www.reciperoulette.tv/) to use.
