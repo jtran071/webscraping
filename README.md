@@ -1,7 +1,7 @@
 ## Web scraping
 
 This tutorial covers web scraping with the basic Unix commands: `wget`, `grep`, and `sed`.
-In particular, we will be using a site called [allrecipes] (http://allrecipes.com/?prop24=PN_Logo) to illustrate how to web scrape for recipes with chicken as the main ingredient, and then put all the ingredients and directions of the recipe into a single file.
+In particular, we will be using a site called [allrecipes] (http://allrecipes.com/?prop24=PN_Logo) to illustrate how to web scrape for recipes with chicken as the main ingredient, and then put all the ingredients and directions of the recipe into individual files in `Chicken_Recipes`.
 
 ### Web scraping and wget
 
@@ -101,7 +101,7 @@ grep -r '<h1 id="itemTitle" class="plaincharacterwrap fn" itemprop="name">.*</h1
 
 Since we have multiple patterns we can append them together with the regular expression OR: `\|`.
 
-By doing a recursive `grep` call with regular expressions as shown in the example above, `grep` scans through all the files in `allrecipes.com/Recipe` to look for the specified regular expressions.
+By doing a recursive `grep` call with regular expressions as shown in the example above, `grep` goes through all the files in `allrecipes.com/Recipe` to look for the specified regular expressions.
 Then, by redirecting the output of `grep` to `output.txt`, we successfully gathered the information we want.
 
 Here is what the output looks like:
@@ -156,11 +156,11 @@ Our final output looks like this:
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummySed.png)
 
-#Tie everything together with a script
+###Tying everything together with a script
 
-Although we have finished downloading all of the chicken recipes the output file is very unorganized.  
+Although we have finished downloading all of the chicken recipes, the output file is very unorganized.  
 We want to be able to see the name of the recipe, the ingredients, and directions very clearly when reading our output file.  
-We also do not want to squash all of the recipes into a single file, so we are going to give each recipe their own folder which contains the name of the recipe, the ingredients, and the directions.
+We also do not want to squash all of the recipes into a single file, so we are going to give each recipe their own text files which contains the name of the recipe, the ingredients, and the directions.
 In order to do this we make a bash script. 
 
 This is the format we use to clearly show what our output file is showing: 
@@ -182,7 +182,7 @@ Directions
 --------------------------------------------------
 
 ```
-After downloading the website with wget, we make a script file called recipe_script.sh.
+After downloading the website with `wget`, we make a script file called `recipe_script.sh`.
 The first thing we write is:
 
 ```if [ ! -d Chicken_Recipes ] then mkdir Chicken_Recipes fi``` 
@@ -191,15 +191,50 @@ This creates a directory that holds all of our chicken recipes if the directory 
 After that, we want to make a for-loop to iterate through all of the recipes and make a file for each one, like this: 
 
 ```for i in $(ls allrecipes.com/Recipe); do```
+`i` is a folder in the directory `allrecipes.com/Recipe` and in our case `i` have the name of each recipe.
+Inside the for loop we want to set up our template, `grep` the name, ingredients, and directions one by one and append onto a file. 
+However before we get started on that we will declare an environment variable `recipe` so we don’t have to rewrite the same thing over and over again.
 
+```recipe=$(ls allrecipes.com/Recipe/$i | grep "Detail.*" | head -1)```
 
+Inside the for loop we want to set up our template, `grep` the name, ingredients, and directions one by one and append onto a file. 
+Unlike before this time we want to `grep` and `sed` the name, ingredients, and directions separately from each other in order to put it in their own section.  
+To do this, we write out the each `grep` and `sed` command separately of each other as shown below.
 
+```
+    recipe=$(ls allrecipes.com/Recipe/$i | grep "Detail.*" | head -1)
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
+    echo "Name" >> "Chicken_Recipes/$i.txt"
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
 
+    grep '<h1 id="itemTitle" class="plaincharacterwrap fn" itemprop="name">.*</h1>' "allrecipes.com/Recipe/$i/$recipe" |
+        sed -n 's/.*>\(.*\)\.<.*/\1/ p;s/.*>\(.*\)<.*/\1/ p' >> "Chicken_Recipes/$i.txt"
 
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
+    echo "Ingredients" >> "Chicken_Recipes/$i.txt"
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
 
+    grep '<span id="lblIngAmount" class="ingredient-amount">.*</span>\|<span id="lblIngName" class="ingredient-name">.*</span>' \
+        "allrecipes.com/Recipe/$i/$recipe" |
+        sed -n 's/.*>\(.*\)\.<.*/\1/ p;s/.*>\(.*\)<.*/\1/ p' >> "Chicken_Recipes/$i.txt"
+
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
+    echo "Directions" >> "Chicken_Recipes/$i.txt"
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
+
+    grep '<span class="plaincharacterwrap break">.*</span>' "allrecipes.com/Recipe/$i/$recipe" |
+        sed -n 's/.*>\(.*\)\.<.*/\1/ p;s/.*>\(.*\)<.*/\1/ p' >> "Chicken_Recipes/$i.txt"
+
+    echo "--------------------------------------------------" >> "Chicken_Recipes/$i.txt"
+    done
+
+```
+
+And voila now our script is finished.
 
 Now that we finished the script, go ahead and run the script with the command `sh recipe_script.sh`. 
-Once the script is done running, the `Chicken_Recipes` folder contains all of the the recipe files in the correct format.  
+Once the script is done running, the `Chicken_Recipes` folder contains all of the the recipe files in the correct format.
+We have uploaded our script and the result of `sh recipe_script.sh` to be compared.
 
 We now have our very own offline cookbook!
 We can also use the information we web scrape as an input file for programs like [reciperoulette] (http://www.reciperoulette.tv/) to use.
