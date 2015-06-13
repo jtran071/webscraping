@@ -30,11 +30,11 @@ Running the command specified above will display a download process in the termi
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/wget.gif)
 
-Websites have a file called [robot.txt] (http://www.gnu.org/software/wget/manual/html_node/Robot-Exclusion.html), which presents a policy that `wget`, and other similar tools, must follow. 
+Websites have a file called [robot.txt] (http://www.gnu.org/software/wget/manual/html_node/Robot-Exclusion.html), which presents a policy that `wget` must follow. 
 This may prevent `wget` from accessing or downloading from certain links when doing a recursive download.
 You can ignore the `robots.txt` by passing in the flag `--execute robots=off` with `wget` to bypass the restrictions.
 
-To run multiple instances of `wget` you may place a `&` at the end, which executes `wget` and places `wget` to run in the background. 
+To run multiple instances of `wget` you may place a `&` at the end of the command, which executes `wget` and places `wget` to run in the background. 
 You can execute the command again to run another instance of `wget`, however, running too many instances may stress out the server so it is a good idea to only run a couple.
 The time `wget` takes to download is dependent on both the site and your connection.
 You can stop the download with `Ctrl + C` to cancel `wget` or  you can run `wget` in the background with `Ctrl + Z` and `bg`.
@@ -112,8 +112,8 @@ Here is what the output looks like:
 
 ### Patterns and sed
 
-After using `grep` to output the lines containing the text we want, we now want to delete all the HTML tags in the file.
-This can be done with the help of [sed] (http://www.grymoire.com/Unix/Sed.html), a stream editor for modifying text, which also supports regular expressions.
+After using `grep` to output the lines containing the text we want, we now want to delete all of the HTML tags in the file.
+This can be done with the help of [sed] (http://www.grymoire.com/Unix/Sed.html), a stream editor for modifying text.
 `sed` also supports regular expressions so we can construct a pattern similar to the one used in `grep` to delete the HTML tags.
 
 In the picture below, we highlighted the information we want with part of the HTML tags enclosing it.
@@ -185,7 +185,7 @@ Then, we create a directory that holds all of our chicken recipes if the directo
 
 ```if [ ! -d Chicken_Recipes ] then mkdir Chicken_Recipes fi``` 
 
-After that, we want to make a for-loop to iterate through all of the recipes and make a file for each one, like this: 
+After that, we make a for-loop to iterate through all of the recipes and make a file for each one, like this: 
 
 ```for i in $(ls allrecipes.com/Recipe); do```
 
@@ -237,7 +237,7 @@ And voila, our script is finished.
 
 Now that we finished writing the script, you can run the script with the command `sh recipe_script.sh`. 
 Once the script is done running, the `Chicken_Recipes` folder contains all of the the recipe files in the correct format.
-We uploaded our [script](./script/create_recipes.sh) and the [result](./Chicken_Recipes)  (WARNING: Contains a large amount of files. Open at your own risk) of `sh recipe_script.sh` for you to compare.
+We uploaded our [script](./script/create_recipes.sh) and the [result](./Chicken_Recipes)  (WARNING: Contains a large amount of files. Open at your own risk!) of `sh recipe_script.sh` for you to compare.
 
 We now have our very own offline cookbook!
 We can also use the information we web scrape as an input file for programs like [reciperoulette] (http://www.reciperoulette.tv/) to use.
