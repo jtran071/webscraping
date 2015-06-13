@@ -191,6 +191,11 @@ This creates a directory that holds all of our chicken recipes if the directory 
 After that, we want to make a for-loop to iterate through all of the recipes and make a file for each one, like this: 
 
 ```for i in $(ls allrecipes.com/Recipe); do```
+`i` is a folder in the directory `allrecipes.com/Recipe` and in our case `i` have the name of each recipe.
+Inside the for loop we want to set up our template, `grep` the name, ingredients, and directions one by one and append onto a file. 
+However before we get started on that we will declare an environment variable `recipe` so we don’t have to rewrite the same thing over and over again.
+
+```recipe=$(ls allrecipes.com/Recipe/$i | grep "Detail.*" | head -1)```
 
 Inside the for loop we want to set up our template, `grep` the name, ingredients, and directions one by one and append onto a file. 
 Unlike before this time we want to `grep` and `sed` the name, ingredients, and directions separately from each other in order to put it in their own section.  
@@ -232,7 +237,7 @@ And voila now our script is finished.
 
 
 
-For more details on how our script works see `script/create_recipes.sh`.
+We have also uploaded a workable script to be used as a comparison of what we just made.
 Now that we finished the script, go ahead and run the script with the command `sh recipe_script.sh`. 
 Once the script is done running, the `Chicken_Recipes` folder contains all of the the recipe files in the correct format.  
 
