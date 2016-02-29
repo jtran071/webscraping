@@ -30,11 +30,11 @@ Running the command specified above will display a download process in the termi
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/wget.gif)
 
-Websites have a file called [robot.txt] (http://www.gnu.org/software/wget/manual/html_node/Robot-Exclusion.html), which presents a policy that `wget`, and other similar tools, must follow. 
+Websites have a file called [robot.txt] (http://www.gnu.org/software/wget/manual/html_node/Robot-Exclusion.html), which presents a policy that `wget` must follow. 
 This may prevent `wget` from accessing or downloading from certain links when doing a recursive download.
 You can ignore the `robots.txt` by passing in the flag `--execute robots=off` with `wget` to bypass the restrictions.
 
-To run multiple instances of `wget` you may place a `&` at the end, which executes `wget` and places `wget` to run in the background. 
+To run multiple instances of `wget` you may place a `&` at the end of the command, which executes `wget` and places `wget` to run in the background. 
 You can execute the command again to run another instance of `wget`, however, running too many instances may stress out the server so it is a good idea to only run a couple.
 The time `wget` takes to download is dependent on both the site and your connection.
 You can stop the download with `Ctrl + C` to cancel `wget` or  you can run `wget` in the background with `Ctrl + Z` and `bg`.
@@ -112,22 +112,20 @@ Here is what the output looks like:
 
 ### Patterns and sed
 
-After using `grep` to output the lines containing the text we want, we now want to delete all the HTML tags in the file.
-This can be done with the help of [sed] (http://www.grymoire.com/Unix/Sed.html), a stream editor for modifying text, which also supports regular expressions.
+After using `grep` to output the lines containing the text we want, we now want to delete all of the HTML tags in the file.
+This can be done with the help of [sed] (http://www.grymoire.com/Unix/Sed.html), a stream editor for modifying text.
 `sed` also supports regular expressions so we can construct a pattern similar to the one used in `grep` to delete the HTML tags.
 
-In the pictures below, we highlighted the information we want and the HTML tags enclosing it.
+In the picture below, we highlighted the information we want with part of the HTML tags enclosing it.
 
-![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/HighlightedGrep1.png)
+![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/HighlightedGrep_fix.png)
 
-![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/HighlightedGrep2.png)
-
-Next, we construct a regular expression that matches the HTML tags we want to remove.
+The information we want is located between `>` and `<` so we want to remove everything except what is between `>` and `<`.
+To do that, we construct a regular expression that matches the HTML tags we want to remove.
 
 ```sed -n 's/.*>\(.*\)<.*/\1/ p' input.txt > output.txt```
 
-The information we want is located between `>` and `<` so the pattern above aims to remove everything BUT the information between the angle brackets in parenthesis.
-It is a bit hard to read at first so we will run through the command in more detail.
+The command above is hard to read at first, so we explain it in detail.
 
 We are looking for any information that is between `>` and `<`, in which `>` and `<` represent the HTML tags.
 Then we want to keep all of the information in the escaped parentheses, in which the parentheses are represented by the `\1`, and the information we want are the recipe names and ingredients.
@@ -137,17 +135,17 @@ After using `sed` on the input file, the output file looks like this.
 
 ![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/YummySedFail.png)
 
-Unfortunately, the directions are excluded in the output file.
-Looking back at the input file, we notice that there is a period at the end of the direction as shown by the red circles below.
+Unfortunately, the directions are excluded from the output file.
+Looking back at the input file, we notice that there is a period at the end of each sentence for the directions as shown by the red circles below.
 
-![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/RedCircle.jpg)
+![my image](https://raw.githubusercontent.com/ktang012/hw4/master/pictures/RedCircle.png)
 
-This is the reason why the directions are not included in the output file.
+This is why the directions are not included in the output file.
 We can include the directions by introducing a second pattern into the `sed` command.
 
 `sed -n 's/.*>\(.*\)<.*/\1/ p;s/.*>\(.*\)\.<.*/\1/ p' input.txt > output.txt`
 
-The `;` will introduce a second pattern to `sed`.
+The `;` introduces a second pattern to `sed`.
 The first part `sed -n 's/.*>\(.*\)<.*/\1/ p'` is for the recipe name and the list of ingredients and the second part `s/.*>\(.*\)\.<.*/\1/ p'` is for the directions.
 We included a period in the second part of `sed` to look for the period at the end of each direction sentence and then remove the period and everything after.
 The key to using `sed` is noticing and experimenting with various patterns.
@@ -158,16 +156,16 @@ Our final output looks like this:
 
 ###Tying everything together with a script
 
-Although we have finished downloading all of the chicken recipes, the output file is very unorganized.  
+Although we finished getting the recipes, the output file is very unorganized.  
 We want to be able to see the name of the recipe, the ingredients, and directions very clearly when reading our output file.  
-We also do not want to squash all of the recipes into a single file, so we are going to give each recipe their own text files which contains the name of the recipe, the ingredients, and the directions.
-In order to do this we make a bash script. 
+We also do not want to put all of the recipes into a single file, so we are going to give each recipe their own text files which contains the name of the recipe, the ingredients, and the directions.
+To do this, we make a bash script. 
 
 This is the format we use to clearly show what our output file is showing: 
 
 ```
 --------------------------------------------------  
-Recipe name 
+Name 
 -------------------------------------------------- 
 <NAME> 
 -------------------------------------------------- 
@@ -182,24 +180,29 @@ Directions
 --------------------------------------------------
 
 ```
-After downloading the website with `wget`, we make a script file called `recipe_script.sh`.
-The first thing we write is:
+First, we make a script file called `recipe_script.sh`.
+Then, we create a directory that holds all of our chicken recipes if the directory did not exist before by writing this to the script:
 
 ```if [ ! -d Chicken_Recipes ] then mkdir Chicken_Recipes fi``` 
 
-This creates a directory that holds all of our chicken recipes if the directory did not exist before.
-After that, we want to make a for-loop to iterate through all of the recipes and make a file for each one, like this: 
+After that, we make a for-loop to iterate through all of the recipes and make a file for each one, like this: 
 
 ```for i in $(ls allrecipes.com/Recipe); do```
-`i` is a folder in the directory `allrecipes.com/Recipe` and in our case `i` have the name of each recipe.
-Inside the for loop we want to set up our template, `grep` the name, ingredients, and directions one by one and append onto a file. 
-However before we get started on that we will declare an environment variable `recipe` so we don’t have to rewrite the same thing over and over again.
+
+`i` is a folder in the directory `allrecipes.com/Recipe` and, in our case, the folders are named after a recipe.
+
+Then, to automate things, we declare an environment variable called `recipe` for the files containing the HTML code.
 
 ```recipe=$(ls allrecipes.com/Recipe/$i | grep "Detail.*" | head -1)```
 
-Inside the for loop we want to set up our template, `grep` the name, ingredients, and directions one by one and append onto a file. 
-Unlike before this time we want to `grep` and `sed` the name, ingredients, and directions separately from each other in order to put it in their own section.  
-To do this, we write out the each `grep` and `sed` command separately of each other as shown below.
+Now, inside the for-loop, we do the following:
+
+1. `grep` the name.
+2. Pipe the result to `sed` to delete the HTML code.
+3. Append the result to a file.
+4. Repeat steps 1 to 3, but for ingredients and directions. 
+
+To organize the information to the format we want, we append headers and lines to separate the name, ingredients, and directions.
 
 ```
     recipe=$(ls allrecipes.com/Recipe/$i | grep "Detail.*" | head -1)
@@ -230,11 +233,11 @@ To do this, we write out the each `grep` and `sed` command separately of each ot
 
 ```
 
-And voila now our script is finished.
+And voila, our script is finished.
 
-Now that we finished the script, go ahead and run the script with the command `sh recipe_script.sh`. 
+Now that we finished writing the script, you can run the script with the command `sh recipe_script.sh`. 
 Once the script is done running, the `Chicken_Recipes` folder contains all of the the recipe files in the correct format.
-We have uploaded our script and the result of `sh recipe_script.sh` to be compared.
+We uploaded our [script](./script/create_recipes.sh) and the [result](./Chicken_Recipes)  (WARNING: Contains a large amount of files. Open at your own risk!) of `sh recipe_script.sh` for you to compare.
 
 We now have our very own offline cookbook!
 We can also use the information we web scrape as an input file for programs like [reciperoulette] (http://www.reciperoulette.tv/) to use.
